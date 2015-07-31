@@ -8,6 +8,7 @@ DATABASE = SqliteDatabase(None)
 
 class User(UserMixin, Model):
     email = CharField(unique=True)
+    nickname = CharField(unique=True, null=True)
     password = CharField(max_length=100)
     joined_at = DateTimeField(default=datetime.datetime.now)
     is_admin = BooleanField(default=False)

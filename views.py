@@ -6,6 +6,18 @@ from flask.ext.bcrypt import check_password_hash
 from flask.ext.login import (login_required, login_user, logout_user,
                             current_user)
 
+@app.route('/user/<nickname>')
+def user_profile(nickname):
+    user = models.User.get(models.User.nickname == nickname)
+    if not user:
+        flash('User could not be found.')
+    else:
+        profile = models.UserProfile.get(models.UserProfile.user == user)
+    return render_template(
+        'user_profile.html', 
+        profile=profile,
+        user=user)
+
 @app.route('/register', methods=('GET', 'POST'))
 def register():
   form = forms.RegistrationForm()
@@ -13,8 +25,7 @@ def register():
     flash('Yay! You registered.', 'success')
     models.User.create_user(
         email=form.email.data,
-        password=form.password.data
-    )
+        password=form.password.data)
     return redirect(url_for('index'))
   return render_template('register.html', form=form)
 
